@@ -1,0 +1,25 @@
+- name: install ABCDE (A Better CD Encoder) and dependecies
+  sudo: yes
+  apt: pkg={{ item }} state=latest update_cache=yes
+  with_items:
+    - abcde
+    - flac
+  when: ansible_os_family == "Debian"
+
+- name: copy ABCDE configuration file
+  copy: src=abcde.conf dest=~/.abcde.conf
+  when: ansible_os_family == "Debian"
+
+- name: copy ABCDE desktop file
+  copy: src=ripcd.desktop dest=~/.local/share/applications
+  when: ansible_os_family == "Debian"
+
+- name: copy mimetypes configuration if file not exist
+  copy: src=mimeapps.list dest=~/.local/share/applications force=no
+  when: ansible_os_family == "Debian"
+
+- name: ensure mimetype settings are present
+  ini_file: dest=~/.local/share/applications/mimeapps.list section="{{ item }}" option=x-content/audio-cdda value=ripcd.desktop
+  with_items:
+    - 'Default Applications'
+    - 'Added Associations'

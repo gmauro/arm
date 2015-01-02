@@ -1,0 +1,4 @@
+[Default Applications]
+x-content/audio-cdda=ripcd.desktop;
+[Added Associations]
+x-content/audio-cdda=ripcd.desktop;
