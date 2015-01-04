@@ -1,0 +1,50 @@
+- name: install dvdbackup and libdvdread4
+  sudo: yes
+  apt: pkg={{ item }} state=latest update_cache=yes
+  with_items:
+    - dvdbackup
+    - libdvdread4
+  when: ansible_os_family == "Debian"
+
+- name: clone libdvdcss git repository
+  command: repo=git://git.videolan.org/libdvdcss
+       dest=/tmp/checkout
+       version=1.2.13
+       ssh_opts="-o StrictHostKeyChecking=no"
+
+- name: compile libdvdcss
+  shell: 'cd /tmp/checkout; {{ item }}'
+  with_items:
+    - autoreconf -i
+    - ./configure --prefix=/usr/local
+    - make 
+
+# - name: install libdvdcss
+#   sudo: yes
+#   command: /usr/share/doc/libdvdread4/install-css.sh
+
+
+- name: copy ld configuration 
+  sudo: yes
+  copy: src=libdvdcss.conf dest=/etc/ld.so.conf.d
+  when: ansible_os_family == "Debian"
+
+- name: ldconfig
+  sudo: yes
+  shell: 'ldconfig -v'
+
+- name: add Handbrake source repository into sources list.
+  sudo: yes
+  apt_repository: repo='ppa:stebbins/handbrake-snapshots' state=present
+  when: ansible_os_family == "Debian"
+
+- name: install Handbrake
+  sudo: yes
+  apt: pkg={{ item }} state=latest update_cache=yes
+  with_items:
+    - handbrake-cli
+    - handbrake-gtk
+  when: ansible_os_family == "Debian"
+
+- name: copy ripdvd script
+  copy: src=ripdvd dest=~/bin mode=0744

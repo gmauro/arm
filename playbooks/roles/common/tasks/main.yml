@@ -1,0 +1,6 @@
+- name: install common packages
+  sudo: yes
+  apt: pkg={{ item }} state=latest update_cache=yes
+  with_items:
+    - git
+  when: ansible_os_family == "Debian"
