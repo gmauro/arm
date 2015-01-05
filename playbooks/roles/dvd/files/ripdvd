@@ -13,7 +13,7 @@ function rip_dvd() {
         DVD_TITLE=${DVD_TITLE// /_}
 
         # Backup the DVD to out hard drive
-        dvdbackup -i $SOURCE_DRIVE -o $OUTPUT_DIR -M -n $DVD_TITLE
+        #dvdbackup -i $SOURCE_DRIVE -o $OUTPUT_DIR -M -n $DVD_TITLE
 
         # grep for the HandBrakeCLI process and get the PID
         HANDBRAKE_PID=`ps aux|grep H\[a\]ndBrakeCLI`
@@ -26,20 +26,24 @@ function rip_dvd() {
                 while [ -e /proc/$HANDBRAKE_PID ]; do sleep 1; done
         fi
 
-        # HandBrake isn't ripping anything so we can pop out the disc
-        eject $SOURCE_DRIVE
+        
 
         # And now we can start encoding
         HandBrakeCLI \
-	    -i $OUTPUT_DIR/$DVD_TITLE \
+	    -i $SOURCE_DRIVE \
 	    -o $OUTPUT_DIR/$DVD_TITLE.$EXTENSION \
 	    --preset=$HANDBRAKE_PRESET \
 	    --native-language ita \
 	    --native-dub \
-	    --audio 1,2,3
+	    --audio 1,2,3 \
+	    --aencoder copy:ac3 \
+	    --audio-fallback ac3
+
+	# HandBrake isn't ripping anything so we can pop out the disc
+        eject $SOURCE_DRIVE
 
         # Clean up
-        rm -R $OUTPUT_DIR/$DVD_TITLE
+        #rm -R $OUTPUT_DIR/$DVD_TITLE
 }
 
 rip_dvd
