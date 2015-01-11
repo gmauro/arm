@@ -7,7 +7,7 @@
   when: ansible_os_family == "Debian"
 
 - name: clone libdvdcss git repository
-  command: repo=git://git.videolan.org/libdvdcss
+  git: repo=git://git.videolan.org/libdvdcss.git
        dest=/tmp/checkout
        version=1.2.13
        ssh_opts="-o StrictHostKeyChecking=no"
@@ -18,6 +18,13 @@
     - autoreconf -i
     - ./configure --prefix=/usr/local
     - make 
+
+- name: install libdvdcss
+  sudo: yes
+  shell: 'cd /tmp/checkout; {{ item }}'
+  with_items:
+    - make install
+
 
 # - name: install libdvdcss
 #   sudo: yes
