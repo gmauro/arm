@@ -1,6 +1,10 @@
 - name: install common packages
-  sudo: yes
+  become: yes
   apt: pkg={{ item }} state=latest update_cache=yes
   with_items:
+    - autoconf
+    - build-essential
     - git
+    - libtool
+    - make
   when: ansible_os_family == "Debian"

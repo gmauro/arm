@@ -1,5 +1,5 @@
 - name: install ABCDE (A Better CD Encoder) and dependecies
-  sudo: yes
+  become: yes
   apt: pkg={{ item }} state=latest update_cache=yes
   with_items:
     - abcde

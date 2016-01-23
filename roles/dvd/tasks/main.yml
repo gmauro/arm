@@ -1,5 +1,5 @@
 - name: install dvdbackup and libdvdread4
-  sudo: yes
+  become: yes
   apt: pkg={{ item }} state=latest update_cache=yes
   with_items:
     - dvdbackup
@@ -20,7 +20,7 @@
     - make 
 
 - name: install libdvdcss
-  sudo: yes
+  become: yes
   shell: 'cd /tmp/checkout; {{ item }}'
   with_items:
     - make install
@@ -32,25 +32,24 @@
 
 
 - name: copy ld configuration 
-  sudo: yes
+  become: yes
   copy: src=libdvdcss.conf dest=/etc/ld.so.conf.d
   when: ansible_os_family == "Debian"
 
 - name: ldconfig
-  sudo: yes
+  become: yes
   shell: 'ldconfig -v'
 
-- name: add Handbrake source repository into sources list.
-  sudo: yes
-  apt_repository: repo='ppa:stebbins/handbrake-snapshots' state=present
-  when: ansible_os_family == "Debian"
+#- name: add Handbrake source repository into sources list.
+#  become: yes
+#  apt_repository: repo='ppa:stebbins/handbrake-snapshots' state=present
+#  when: ansible_os_family == "Debian"
 
 - name: install Handbrake
-  sudo: yes
+  become: yes
   apt: pkg={{ item }} state=latest update_cache=yes
   with_items:
     - handbrake-cli
-    - handbrake-gtk
   when: ansible_os_family == "Debian"
 
 - name: copy ripdvd script
