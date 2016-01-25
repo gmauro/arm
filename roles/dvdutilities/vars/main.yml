@@ -1,0 +1,3 @@
+local_bin: /usr/local/bin
+output_dir: "~/arm_tmp"
+source_drive: /dev/sr0

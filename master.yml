@@ -1,4 +1,7 @@
 - hosts: master
+  vars:
+    source_drive: /dev/sr0
+    output_dir: "~/tmp"
   roles:
   - dvdbackup
   - dvdutilities

@@ -4,21 +4,23 @@ import shutil
 import subprocess
 import sys
 
+SOURCE_DRIVE = '_source_drive'
+OUTPUT_DIR = '_output_dir'
+
+
 def make_parser():
     parser = argparse.ArgumentParser(description='dvd_utils_launcher')
-    parser.add_argument('--action', type=str, choices=['backup', 'ripping',
-                                                       'bundle'],
-                        help='actions', required=True)
-    parser.add_argument('--source_drive', type=str, default='/dev/sr0',
-                        help='source drive path (default /dev/sr0)')
+    parser.add_argument('--action', type=str, help='actions', required=True,
+                        choices=['backup', 'ripping', 'bundle'])
+    parser.add_argument('--source_drive', type=str, default=SOURCE_DRIVE,
+                        help='source drive path (default {})'.format(SOURCE_DRIVE))
     parser.add_argument('--output_dir', type=str, help='Output dir path',
-                        default="~/tmp")
+                        default=OUTPUT_DIR)
     parser.add_argument('--config_file', type=str, default='dvdul.conf')
     parser.add_argument('--handbrake_preset', type=str, default='AppleTV 3',
                         help='HandBrake device preset (default AppleTV 3)')
     parser.add_argument('--extension', type=str, default='mkv',
                         help='File container extension (default mkv)')
-
     return parser
 
 
@@ -79,7 +81,7 @@ def main(argv):
         ripping(output_dir, config_file, extension, handbrake_preset)
 
     if action == 'bundle':
-        cmd = "oswitch gmauro/arm dvdul ripping"
+        cmd = "oswitch gmauro/arm dvdul --action ripping"
         proc_to_exec(cmd)
 
 if __name__ == '__main__':

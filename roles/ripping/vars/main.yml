@@ -1,0 +1,2 @@
+libdvdcss_tmp_dir: /tmp/libdvdcss
+ld_conf_dir: /etc/ld.so.conf.d

@@ -1,6 +1,15 @@
+- name: Creates support directory
+  file: path={{ output_dir }} state=directory
+
 - name: copy dvdul script
   become: yes
-  copy: src={{item.name}} dest=/usr/local/bin mode={{item.mode}}
+  copy: src={{item.name}} dest={{ local_bin }} mode={{item.mode}}
   with_items:
     - { name: 'dvdul', mode: '0777' }
     - { name: 'dvdul.py', mode: '0644' }
+
+- name: replace source_drive var
+  replace: dest="{{ local_bin }}/dvdul.py" regexp='_source_drive' replace="{{ source_drive }}"
+
+- name: replace output_dir var
+  replace: dest="{{ local_bin }}/dvdul.py" regexp='_output_dir' replace="{{ output_dir }}"
