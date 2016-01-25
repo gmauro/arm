@@ -1,4 +1,5 @@
 - hosts: container
   roles:
   - buildpkgs
+  - ripping
   - dvdutilities

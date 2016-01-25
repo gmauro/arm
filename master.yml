@@ -1,3 +1,4 @@
 - hosts: master
   roles:
   - dvdbackup
+  - dvdutilities
