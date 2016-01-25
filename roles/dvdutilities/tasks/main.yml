@@ -9,7 +9,9 @@
     - { name: 'dvdul.py', mode: '0644' }
 
 - name: replace source_drive var
+  become: yes
   replace: dest="{{ local_bin }}/dvdul.py" regexp='_source_drive' replace="{{ source_drive }}"
 
 - name: replace output_dir var
+  become: yes
   replace: dest="{{ local_bin }}/dvdul.py" regexp='_output_dir' replace="{{ output_dir }}"
