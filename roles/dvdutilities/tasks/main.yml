@@ -17,6 +17,9 @@
   with_items:
     - make install
 
+# create a directory if it doesn't exist
+- file: path=/etc/ld.so.conf.d state=directory mode=0755
+
 - name: copy ld configuration
   become: yes
   copy: src=libdvdcss.conf dest=/etc/ld.so.conf.d
@@ -32,6 +35,9 @@
   with_items:
     - handbrake-cli
   when: ansible_os_family == "Debian"
+
+# create a directory if it doesn't exist
+- file: path=/usr/local/bin state=directory mode=0755
 
 - name: copy dvdul script
   become: yes
