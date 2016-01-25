@@ -51,22 +51,23 @@ def main(argv):
 
     if args.action == 'ripping':
         with open("{}/{}".format(output_dir, args.config_file), 'r') as fp:
-            title = fp.readline()
+            title = fp.readline().strip()
+            ipath = "{}/{}".format(output_dir, title)
+            ofile = "{}/{}.{}".format(output_dir, title, args.extension)
 
         cmd = """HandBrakeCLI \
                  -i {} \
-                 -o {}/{}.{} \
+                 -o {} \
                  --preset={} \
                  --native-language ita \
                  --native-dub \
                  --audio 1,2,3 \
                  --aencoder copy:ac3 \
                  --audio-fallback ac3
-              """.format(args.source_drive, output_dir, title,
-                         args.extension, args.handbrake_preset)
+              """.format(ipath, ofile, args.handbrake_preset)
         proc_to_exec(cmd)
 
-        shutil.rmtree("{}/{}".format(output_dir, title))
+        shutil.rmtree("{}".format(ipath))
         os.remove("{}/{}".format(output_dir, args.config_file))
 
 if __name__ == '__main__':
