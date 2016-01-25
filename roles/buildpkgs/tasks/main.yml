@@ -1,4 +1,4 @@
-- name: install common packages
+- name: install buildpkgs packages
   become: yes
   apt: pkg={{ item }} state=latest update_cache=yes
   with_items:

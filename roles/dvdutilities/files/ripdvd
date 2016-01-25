@@ -1,20 +1,25 @@
 #!/bin/bash
 
-OUTPUT_DIR=~/Movies
+OUTPUT_DIR=~/tmp
 SOURCE_DRIVE="/dev/sr0"
 HANDBRAKE_PRESET="AppleTV 3"
 EXTENSION="mkv"
 
-function rip_dvd() {
-
+function backup() {
         # Grab the DVD title
         DVD_TITLE=$(blkid -o value -s LABEL $SOURCE_DRIVE)
         # Replace spaces with underscores
         DVD_TITLE=${DVD_TITLE// /_}
 
         # Backup the DVD to out hard drive
-        #dvdbackup -i $SOURCE_DRIVE -o $OUTPUT_DIR -M -n $DVD_TITLE
+        dvdbackup -i $SOURCE_DRIVE -o $OUTPUT_DIR -M -n $DVD_TITLE
 
+        # pop out the disc
+        eject $SOURCE_DRIVE
+
+}
+
+function rip_dvd() {
         # grep for the HandBrakeCLI process and get the PID
         HANDBRAKE_PID=`ps aux|grep H\[a\]ndBrakeCLI`
         set -- $HANDBRAKE_PID
@@ -25,8 +30,6 @@ function rip_dvd() {
         then
                 while [ -e /proc/$HANDBRAKE_PID ]; do sleep 1; done
         fi
-
-        
 
         # And now we can start encoding
         HandBrakeCLI \
@@ -39,11 +42,25 @@ function rip_dvd() {
 	    --aencoder copy:ac3 \
 	    --audio-fallback ac3
 
-	# HandBrake isn't ripping anything so we can pop out the disc
-        eject $SOURCE_DRIVE
-
         # Clean up
         #rm -R $OUTPUT_DIR/$DVD_TITLE
 }
 
-rip_dvd
+function usage {
+    echo >&2
+    echo >&2 "usage: $0 (backup|rip|help) [argument]"
+    echo >&2
+    echo >&2 "$0 start/stop/restart arguments:"
+    echo >&2 "  bundle                  Client, Server, DB nodes"
+    echo >&2 "  cclient                 Client node, only if you have builded a custom Omero.biobank client"
+    echo >&2
+
+}
+
+if [ $# -lt 1 ]
+then
+  usage
+  exit 1
+else
+  $1
+fi

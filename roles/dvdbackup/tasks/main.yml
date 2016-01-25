@@ -1,0 +1,7 @@
+- name: install dvdbackup and libdvdread4
+  become: yes
+  apt: pkg={{ item }} state=latest update_cache=yes
+  with_items:
+    - dvdbackup
+    - libdvdread4
+  when: ansible_os_family == "Debian"

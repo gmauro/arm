@@ -1,0 +1,4 @@
+- hosts: container
+  roles:
+  - buildpkgs
+  - dvdutilities
