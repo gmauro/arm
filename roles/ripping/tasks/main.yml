@@ -1,0 +1,34 @@
+- name: clone libdvdcss git repository
+  git: repo=git://git.videolan.org/libdvdcss.git
+       dest=/tmp/checkout
+       version=1.2.13
+       ssh_opts="-o StrictHostKeyChecking=no"
+
+- name: compile libdvdcss
+  shell: 'cd /tmp/checkout; {{ item }}'
+  with_items:
+    - autoreconf -i
+    - ./configure --prefix=/usr/local
+    - make
+
+- name: install libdvdcss
+  become: yes
+  shell: 'cd /tmp/checkout; {{ item }}'
+  with_items:
+    - make install
+
+- name: copy ld configuration
+  become: yes
+  copy: src=libdvdcss.conf dest=/etc/ld.so.conf.d
+  when: ansible_os_family == "Debian"
+
+- name: ldconfig
+  become: yes
+  shell: 'ldconfig -v'
+
+- name: install Handbrake
+  become: yes
+  apt: pkg={{ item }} state=latest update_cache=yes
+  with_items:
+    - handbrake-cli
+  when: ansible_os_family == "Debian"
