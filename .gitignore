@@ -1,1 +1,8 @@
+build
+docs/_build
+*.pyc
 *~
+*.log
+dist
+.idea
+
