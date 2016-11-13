@@ -1,5 +1,5 @@
 - name: clone libdvdcss git repository
-  git: repo=git://git.videolan.org/libdvdcss.git
+  git: repo=git@code.videolan.org:videolan/libdvdcss.git
        dest={{ libdvdcss_tmp_dir }}
        version=1.2.13
        ssh_opts="-o StrictHostKeyChecking=no"
