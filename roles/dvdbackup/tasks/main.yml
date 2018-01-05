@@ -19,5 +19,5 @@
   with_items:
     - dvdbackup
     - libdvdread4
-    - libdvdcss
+    - libdvdcss2
   when: ansible_os_family == "Debian"
