@@ -1,7 +1,23 @@
-- name: install dvdbackup and libdvdread4
+- name: Import the repository key
+  apt_key:
+    url: http://download.videolan.org/pub/debian/videolan-apt.asc
+    state: present
+
+- name: Add specified repository into sources list using specified filename.
+  apt_repository:
+    repo: {{ item }}
+    state: present
+    filename: 'libdvdcss'
+  with_items:
+    - 'deb http://download.videolan.org/pub/debian/stable/ /'
+    - 'deb-src http://download.videolan.org/pub/debian/stable/ /'
+  when: ansible_os_family == "Debian"
+
+- name: install dvdbackup, libdvdread4, libdvdcss
   become: yes
   apt: pkg={{ item }} state=latest update_cache=yes
   with_items:
     - dvdbackup
     - libdvdread4
+    - libdvdcss
   when: ansible_os_family == "Debian"
